@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configurable
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages={"sample.repository"})
+@EnableTransactionManagement
 public class CommonConfiguration {
 
   @Bean
@@ -25,6 +30,7 @@ public class CommonConfiguration {
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(jpaVendorAdapter);
     factory.setDataSource(dataSource());
+    factory.afterPropertiesSet();
     return factory.getObject();
   }
   
@@ -37,8 +43,20 @@ public class CommonConfiguration {
       e.printStackTrace();
     }
     dataSource.setUrl("jdbc:mysql://localhost/batch_manager");
-    dataSource.setUsername("batch_manager");
-    dataSource.setPassword("batch_manager!234");
+//    dataSource.setUsername("appUser");
+//    dataSource.setPassword("batchManager!234");
+    dataSource.setUsername("root");
+    dataSource.setPassword("");
     return dataSource;
+  }
+  
+  @Bean
+  public PlatformTransactionManager transactionManager() {
+    return new JpaTransactionManager(entityManagerFactory());
+  }
+  
+  @Bean 
+  public HibernateExceptionTranslator hibernateExceptionTranslator(){ 
+    return new HibernateExceptionTranslator(); 
   }
 }

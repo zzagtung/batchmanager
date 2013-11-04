@@ -1,13 +1,24 @@
 package sample.item;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="SampleTest", schema="batch_manager")
 public class Person {
-  private int id;
+
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private long id;
   private String firstname;
   private String lastname;
-  public int getId() {
+  public long getId() {
     return id;
   }
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
   public String getFirstname() {
