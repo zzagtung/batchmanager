@@ -43,10 +43,8 @@ public class CommonConfiguration {
       e.printStackTrace();
     }
     dataSource.setUrl("jdbc:mysql://localhost/batch_manager");
-//    dataSource.setUsername("appUser");
-//    dataSource.setPassword("batchManager!234");
-    dataSource.setUsername("root");
-    dataSource.setPassword("");
+    dataSource.setUsername("appuser");
+    dataSource.setPassword("appUser!234");
     return dataSource;
   }
   

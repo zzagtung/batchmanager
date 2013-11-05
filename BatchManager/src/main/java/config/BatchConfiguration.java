@@ -7,7 +7,15 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.dao.MapExecutionContextDao;
+import org.springframework.batch.core.repository.dao.MapJobExecutionDao;
+import org.springframework.batch.core.repository.dao.MapJobInstanceDao;
+import org.springframework.batch.core.repository.dao.MapStepExecutionDao;
+import org.springframework.batch.core.repository.support.SimpleJobRepository;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -52,5 +60,15 @@ public class BatchConfiguration {
   @Bean
   public ItemProcessor<Person, Person> processor() {
     return new SampleItemProcessor();
+  }
+  
+  @Bean
+  public JobLauncher lancher() {
+    return new SimpleJobLauncher();
+  }
+  
+  @Bean
+  public JobRepository repository() {
+    return new SimpleJobRepository(new MapJobInstanceDao(), new MapJobExecutionDao(), new MapStepExecutionDao(), new MapExecutionContextDao());
   }
 }
