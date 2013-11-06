@@ -1,17 +1,16 @@
 package sample.writer;
 
-import javax.persistence.EntityManagerFactory;
+import java.util.List;
 
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.transaction.annotation.Transactional;
 
 import sample.item.Person;
 
-public class SampleWriter {
+public class SampleWriter<T> extends JpaItemWriter<Person> {
 
-  public ItemWriter<Person> getWriter(EntityManagerFactory entityManagerFactory) {
-    JpaItemWriter<Person> writer = new JpaItemWriter<Person>();
-    writer.setEntityManagerFactory(entityManagerFactory);
-    return writer;
+  @Transactional
+  public void write(List<? extends Person> items) {
+    super.write(items);
   }
 }

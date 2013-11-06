@@ -13,7 +13,7 @@ public class SampleReader {
 
   public ItemReader<Person> getReader() {
     FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
-    reader.setResource(new ClassPathResource("sample-data.csv"));
+    reader.setResource(new ClassPathResource("sample/sample-data.csv"));
     reader.setLineMapper(new DefaultLineMapper<Person>() {
       {
         setLineTokenizer(new DelimitedLineTokenizer() {
