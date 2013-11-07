@@ -7,9 +7,9 @@ import javax.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -31,6 +31,8 @@ public class CommonConfiguration implements TransactionManagementConfigurer {
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(jpaVendorAdapter);
     factory.setDataSource(dataSource());
+    factory.setPersistenceUnitName("sample");
+    factory.setPackagesToScan("sample.item");
     factory.afterPropertiesSet();
     return factory.getObject();
   }
@@ -55,12 +57,13 @@ public class CommonConfiguration implements TransactionManagementConfigurer {
   }
   
   @Bean
-  public PlatformTransactionManager transactionManager() {
-    return new DataSourceTransactionManager(dataSource());
+  public JpaTransactionManager transactionManager() {
+    return new JpaTransactionManager(entityManagerFactory());
   }
-  
+
   @Override
   public PlatformTransactionManager annotationDrivenTransactionManager() {
-      return transactionManager();
+    return transactionManager();
   }
+  
 }

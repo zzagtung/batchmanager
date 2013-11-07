@@ -8,16 +8,16 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import sample.item.Person;
 import sample.repository.PersonRepository;
-import config.BatchConfiguration;
 
 public class SampleApplication {
 
   public static void main(String[] args) {
-    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(BatchConfiguration.class);
+    //AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(BatchConfiguration.class);
+    ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/sample/config/batchConfig.xml");
     PersonRepository repo = ctx.getBean(PersonRepository.class);
     Iterable<Person> allPerson = repo.findAll();
     for (Person person : allPerson) {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:batch="http://www.springframework.org/schema/batch"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+  <import resource="./dataSourceConfig.xml"/>
+  <batch:job-repository id="jobRepository" isolation-level-for-create="DEFAULT"/>
+  <batch:job id="importUserJob">
+    <batch:step id="step1">
+      <batch:tasklet>
+        <batch:chunk reader="reader" processor="processor" writer="writer" commit-interval="10" />
+      </batch:tasklet>
+    </batch:step>
+  </batch:job>
+
+  <bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="resource" value="classpath:/sample/sample-data.csv" />
+    <property name="lineMapper">
+      <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+        <property name="lineTokenizer">
+          <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+            <property name="names">
+              <array><value>firstname</value><value>lastname</value></array>
+            </property>
+          </bean>
+        </property>
+        <property name="fieldSetMapper">
+          <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+            <property name="targetType" value="sample.item.Person" />
+          </bean>
+        </property>
+      </bean>
+    </property>
+  </bean>
+  <bean id="writer" class="org.springframework.batch.item.database.JpaItemWriter" >
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  </bean>
+  <bean id="processor" class="sample.processor.SampleItemProcessor" />
+  <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+    <property name="jobRepository" ref="jobRepository" />
+  </bean>
+</beans>

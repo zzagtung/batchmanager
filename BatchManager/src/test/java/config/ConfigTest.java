@@ -10,12 +10,44 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ConfigTest {
 
   @Test
   public void configLoadingTest() {
     AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(BatchConfiguration.class);
+    String[] beanNames = ctx.getBeanDefinitionNames();
+    for (String beanName : beanNames) {
+      System.out.println("====================> " + beanName);
+    }
+    JobLauncher jobLauncher = ctx.getBean(JobLauncher.class);
+    Job importUser = ctx.getBean("importUserJob", Job.class);
+    JobParameters params = new JobParametersBuilder().toJobParameters();
+    try {
+      jobLauncher.run(importUser, params);
+    }
+    catch (JobExecutionAlreadyRunningException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch (JobRestartException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch (JobInstanceAlreadyCompleteException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch (JobParametersInvalidException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
+  @Test
+  public void xmlConfigLoading() {
+    ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/sample/config/batchConfig.xml");
     String[] beanNames = ctx.getBeanDefinitionNames();
     for (String beanName : beanNames) {
       System.out.println("====================> " + beanName);

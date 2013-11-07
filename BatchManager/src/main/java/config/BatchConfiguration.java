@@ -25,8 +25,6 @@ import sample.reader.SampleReader;
 @Import(CommonConfiguration.class)
 public class BatchConfiguration {
 
-  
-  
   @Bean
   public ItemReader<Person> reader() {
     SampleReader reader = new SampleReader();
