@@ -1,0 +1,1 @@
+http://amitstechblog.wordpress.com/2011/05/31/supporting-custom-isolation-levels-with-jpa/
